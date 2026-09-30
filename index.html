@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Assistant Opérateur</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f2f4f7;
+      padding: 20px;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .header {
+      background: #1f4e79;
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px 15px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      cursor: pointer;
+    }
+
+    .card:active {
+      transform: scale(0.97);
+    }
+
+    .icon {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .card h2 {
+      font-size: 17px;
+      color: #333;
+    }
+
+    .content {
+      background: white;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+    }
+
+    .content h2 {
+      margin-bottom: 15px;
+      color: #1f4e79;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #1f4e79;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #resultat {
+      margin-top: 15px;
+      padding: 15px;
+      background: #eef5fb;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <h1>👷 Assistant Opérateur</h1>
+    <p>Gestion des opérations de plateforme</p>
+  </div>
+
+  <div class="menu">
+
+    <div class="card" onclick="ouvrir('production')">
+      <div class="icon">📊</div>
+      <h2>Production</h2>
+    </div>
+
+    <div class="card" onclick="ouvrir('passation')">
+      <div class="icon">📝</div>
+      <h2>Passation</h2>
+    </div>
+
+    <div class="card" onclick="ouvrir('anomalies')">
+      <div class="icon">🚨</div>
+      <h2>Anomalies</h2>
+    </div>
+
+    <div class="card" onclick="ouvrir('rapports')">
+      <div class="icon">📋</div>
+      <h2>Rapports</h2>
+    </div>
+
+  </div>
+
+
+  <!-- PRODUCTION -->
+
+  <div id="production" class="content">
+
+    <h2>📊 Calcul de production</h2>
+
+    <label>Plateforme</label>
+    <input id="plateforme" type="text" value="23-36">
+
+    <label>Constante huile</label>
+    <input id="constante" type="number" value="103800">
+
+    <label>Temps écoulé (secondes)</label>
+    <input id="temps" type="number" value="754">
+
+    <label>Compteur gaz début</label>
+    <input id="gazDebut" type="number" value="10002764">
+
+    <label>Compteur gaz fin</label>
+    <input id="gazFin" type="number" value="10002987">
+
+    <button onclick="calculer()">
+      Calculer
+    </button>
+
+    <div id="resultat">
+      Résultat : en attente...
+    </div>
+
+  </div>
+
+
+  <!-- PASSATION -->
+
+  <div id="passation" class="content">
+
+    <h2>📝 Passation</h2>
+
+    <label>Observations</label>
+
+    <input
+      id="observation"
+      type="text"
+      placeholder="Écrire une observation..."
+    >
+
+    <button onclick="enregistrerPassation()">
+      Enregistrer
+    </button>
+
+  </div>
+
+
+  <!-- ANOMALIES -->
+
+  <div id="anomalies" class="content">
+
+    <h2>🚨 Signaler une anomalie</h2>
+
+    <label>Description</label>
+
+    <input
+      id="anomalie"
+      type="text"
+      placeholder="Ex : fuite au manifold"
+    >
+
+    <button onclick="signalerAnomalie()">
+      Signaler
+    </button>
+
+  </div>
+
+
+  <!-- RAPPORTS -->
+
+  <div id="rapports" class="content">
+
+    <h2>📋 Rapports</h2>
+
+    <p>
+      Les rapports enregistrés apparaîtront ici.
+    </p>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  // Ouvrir une section
+  function ouvrir(section) {
+
+    const sections = document.querySelectorAll(".content");
+
+    sections.forEach(function(element) {
+      element.style.display = "none";
+    });
+
+    document.getElementById(section).style.display = "block";
+  }
+
+
+  // Calcul de production
+  function calculer() {
+
+    const constante =
+      Number(document.getElementById("constante").value);
+
+    const temps =
+      Number(document.getElementById("temps").value);
+
+    const gazDebut =
+      Number(document.getElementById("gazDebut").value);
+
+    const gazFin =
+      Number(document.getElementById("gazFin").value);
+
+
+    // Calcul huile
+    const huile = constante / temps;
+
+
+    // Différence compteur gaz
+    const differenceGaz = gazFin - gazDebut;
+
+
+    // Calcul gaz
+    const gaz =
+      differenceGaz * 86400 / temps;
+
+
+    document.getElementById("resultat").innerHTML =
+
+      "🛢️ Production huile : "
+      + huile.toFixed(2)
+      + "<br><br>"
+
+      + "💨 Production gaz : "
+      + gaz.toFixed(2)
+      + "<br><br>"
+
+      + "📊 Différence compteur gaz : "
+      + differenceGaz;
+
+  }
+
+
+  // Passation
+  function enregistrerPassation() {
+
+    const observation =
+      document.getElementById("observation").value;
+
+    alert(
+      "Passation enregistrée :\n" + observation
+    );
+
+  }
+
+
+  // Anomalie
+  function signalerAnomalie() {
+
+    const anomalie =
+      document.getElementById("anomalie").value;
+
+    alert(
+      "🚨 Anomalie signalée :\n" + anomalie
+    );
+
+  }
+
+</script>
+
+</body>
+    </html>
