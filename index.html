@@ -22,10 +22,8 @@ body {
     font-family: Arial, sans-serif;
     background: #f4f6f8;
     color: #222;
-    padding-bottom: 75px;
+    padding-bottom: 80px;
 }
-
-/* HEADER */
 
 .header {
     background: #123b5d;
@@ -43,15 +41,19 @@ body {
     opacity: 0.85;
 }
 
-/* CONTENU */
-
 .container {
     padding: 20px;
     max-width: 600px;
     margin: auto;
 }
 
-/* TITRE */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
 
 .section-title {
     margin-bottom: 15px;
@@ -65,8 +67,6 @@ body {
     color: #777;
     margin-top: 5px;
 }
-
-/* CARTES */
 
 .cards {
     display: grid;
@@ -101,18 +101,6 @@ body {
     font-size: 13px;
 }
 
-/* PAGES */
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-/* FORMULAIRE */
-
 .form-card {
     background: white;
     padding: 20px;
@@ -143,8 +131,6 @@ textarea {
     resize: vertical;
 }
 
-/* BOUTONS */
-
 .btn {
     width: 100%;
     padding: 14px;
@@ -157,12 +143,6 @@ textarea {
     font-weight: bold;
 }
 
-.btn:active {
-    transform: scale(0.98);
-}
-
-/* RESULTAT */
-
 .result {
     margin-top: 20px;
     padding: 18px;
@@ -171,11 +151,12 @@ textarea {
     display: none;
 }
 
-.result h3 {
-    margin-bottom: 10px;
+.back {
+    margin-bottom: 20px;
+    color: #123b5d;
+    font-weight: bold;
+    cursor: pointer;
 }
-
-/* NAVIGATION */
 
 .bottom-nav {
     position: fixed;
@@ -198,24 +179,37 @@ textarea {
     cursor: pointer;
 }
 
-.nav-item .nav-icon {
+.nav-icon {
     font-size: 23px;
     display: block;
     margin-bottom: 3px;
 }
 
-.nav-item.active {
-    color: #123b5d;
-    font-weight: bold;
+.history-item {
+    background: white;
+    padding: 16px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 
-/* BOUTON RETOUR */
-
-.back {
-    margin-bottom: 20px;
+.history-item strong {
     color: #123b5d;
-    font-weight: bold;
-    cursor: pointer;
+}
+
+.delete-btn {
+    background: #b3261e;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 7px;
+    margin-top: 10px;
+}
+
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 30px 10px;
 }
 
 </style>
@@ -226,8 +220,6 @@ textarea {
 <body>
 
 
-<!-- ================= HEADER ================= -->
-
 <div class="header">
 
     <h1>👷 Assistant Opérateur</h1>
@@ -237,11 +229,10 @@ textarea {
 </div>
 
 
-
 <div class="container">
 
 
-<!-- ================= ACCUEIL ================= -->
+<!-- ACCUEIL -->
 
 <div id="home" class="page active">
 
@@ -255,7 +246,6 @@ textarea {
 
 
     <div class="cards">
-
 
         <div class="card"
              onclick="showPage('production')">
@@ -276,7 +266,7 @@ textarea {
 
             <h3>Passation</h3>
 
-            <p>Notes et observations</p>
+            <p>Enregistrer une passation</p>
 
         </div>
 
@@ -300,7 +290,7 @@ textarea {
 
             <h3>Rapports</h3>
 
-            <p>Consulter les rapports</p>
+            <p>Voir l'historique</p>
 
         </div>
 
@@ -310,7 +300,7 @@ textarea {
 
 
 
-<!-- ================= PRODUCTION ================= -->
+<!-- PRODUCTION -->
 
 <div id="production" class="page">
 
@@ -332,7 +322,6 @@ textarea {
 
 
     <div class="form-card">
-
 
         <label>Plateforme</label>
 
@@ -379,21 +368,18 @@ textarea {
         >
 
 
-        <button
-            class="btn"
-            onclick="calculerProduction()">
+        <button class="btn"
+                onclick="calculerProduction()">
 
-            Calculer la production
+            Calculer
 
         </button>
 
 
-        <div
-            id="resultat"
-            class="result">
+        <div id="resultat"
+             class="result">
 
         </div>
-
 
     </div>
 
@@ -401,7 +387,7 @@ textarea {
 
 
 
-<!-- ================= PASSATION ================= -->
+<!-- PASSATION -->
 
 <div id="passation" class="page">
 
@@ -417,13 +403,12 @@ textarea {
 
         <h2>📝 Passation</h2>
 
-        <p>Enregistrer les observations</p>
+        <p>Enregistrer une observation</p>
 
     </div>
 
 
     <div class="form-card">
-
 
         <label>Équipe</label>
 
@@ -442,18 +427,16 @@ textarea {
 
         <textarea
             id="observation"
-            placeholder="Écrire l'observation...">
+            placeholder="Ex : paramètres normaux...">
         </textarea>
 
 
-        <button
-            class="btn"
-            onclick="enregistrerPassation()">
+        <button class="btn"
+                onclick="enregistrerPassation()">
 
-            Enregistrer
+            💾 Enregistrer
 
         </button>
-
 
     </div>
 
@@ -461,7 +444,7 @@ textarea {
 
 
 
-<!-- ================= ANOMALIES ================= -->
+<!-- ANOMALIES -->
 
 <div id="anomalies" class="page">
 
@@ -475,17 +458,16 @@ textarea {
 
     <div class="section-title">
 
-        <h2>🚨 Anomalies</h2>
+        <h2>🚨 Anomalie</h2>
 
-        <p>Signaler une anomalie</p>
+        <p>Signaler un problème</p>
 
     </div>
 
 
     <div class="form-card">
 
-
-        <label>Type d'anomalie</label>
+        <label>Type</label>
 
         <select id="typeAnomalie">
 
@@ -510,14 +492,12 @@ textarea {
         </textarea>
 
 
-        <button
-            class="btn"
-            onclick="signalerAnomalie()">
+        <button class="btn"
+                onclick="signalerAnomalie()">
 
-            🚨 Signaler
+            🚨 Enregistrer
 
         </button>
-
 
     </div>
 
@@ -525,7 +505,7 @@ textarea {
 
 
 
-<!-- ================= RAPPORTS ================= -->
+<!-- RAPPORTS -->
 
 <div id="rapports" class="page">
 
@@ -539,22 +519,24 @@ textarea {
 
     <div class="section-title">
 
-        <h2>📋 Rapports</h2>
+        <h2>📋 Historique</h2>
 
-        <p>Historique des opérations</p>
+        <p>Vos opérations enregistrées</p>
+
+    </div>
+
+
+    <div id="historique">
 
     </div>
 
 
-    <div class="form-card">
+    <button class="btn"
+            onclick="effacerHistorique()">
 
-        <p>
+        🗑️ Effacer l'historique
 
-        Aucun rapport enregistré pour le moment.
-
-        </p>
-
-    </div>
+    </button>
 
 </div>
 
@@ -563,14 +545,12 @@ textarea {
 
 
 
-<!-- ================= NAVIGATION ================= -->
+<!-- NAVIGATION -->
 
 <div class="bottom-nav">
 
-
-    <div
-        class="nav-item active"
-        onclick="showPage('home')">
+    <div class="nav-item"
+         onclick="showPage('home')">
 
         <span class="nav-icon">🏠</span>
 
@@ -579,9 +559,8 @@ textarea {
     </div>
 
 
-    <div
-        class="nav-item"
-        onclick="showPage('production')">
+    <div class="nav-item"
+         onclick="showPage('production')">
 
         <span class="nav-icon">📊</span>
 
@@ -590,9 +569,8 @@ textarea {
     </div>
 
 
-    <div
-        class="nav-item"
-        onclick="showPage('passation')">
+    <div class="nav-item"
+         onclick="showPage('passation')">
 
         <span class="nav-icon">📝</span>
 
@@ -601,16 +579,14 @@ textarea {
     </div>
 
 
-    <div
-        class="nav-item"
-        onclick="showPage('anomalies')">
+    <div class="nav-item"
+         onclick="showPage('rapports')">
 
-        <span class="nav-icon">🚨</span>
+        <span class="nav-icon">📋</span>
 
-        Anomalies
+        Rapports
 
     </div>
-
 
 </div>
 
@@ -623,10 +599,8 @@ textarea {
 
 function showPage(pageId) {
 
-
     const pages =
         document.querySelectorAll(".page");
-
 
     pages.forEach(function(page) {
 
@@ -634,11 +608,16 @@ function showPage(pageId) {
 
     });
 
-
     document
         .getElementById(pageId)
         .classList.add("active");
 
+
+    if (pageId === "rapports") {
+
+        afficherHistorique();
+
+    }
 
     window.scrollTo(0, 0);
 
@@ -646,28 +625,39 @@ function showPage(pageId) {
 
 
 
-/* ================= CALCUL PRODUCTION ================= */
+/* ================= DATE ================= */
+
+function dateActuelle() {
+
+    const maintenant = new Date();
+
+    return maintenant.toLocaleString("fr-FR");
+
+}
+
+
+
+/* ================= PRODUCTION ================= */
 
 function calculerProduction() {
 
+    const plateforme =
+        document.getElementById("plateforme").value;
 
     const constante =
         Number(
             document.getElementById("constante").value
         );
 
-
     const temps =
         Number(
             document.getElementById("temps").value
         );
 
-
     const gazDebut =
         Number(
             document.getElementById("gazDebut").value
         );
-
 
     const gazFin =
         Number(
@@ -684,7 +674,7 @@ function calculerProduction() {
     }
 
 
-    const productionHuile =
+    const huile =
         constante / temps;
 
 
@@ -692,7 +682,7 @@ function calculerProduction() {
         gazFin - gazDebut;
 
 
-    const productionGaz =
+    const gaz =
         differenceGaz * 86400 / temps;
 
 
@@ -708,31 +698,61 @@ function calculerProduction() {
         <h3>📊 Résultat</h3>
 
         <p>
+        Plateforme :
+        <strong>${plateforme}</strong>
+        </p>
+
+        <br>
+
+        <p>
         🛢️ Production huile :
-        <strong>
-        ${productionHuile.toFixed(2)}
-        </strong>
+        <strong>${huile.toFixed(2)}</strong>
         </p>
 
         <br>
 
         <p>
         💨 Différence gaz :
-        <strong>
-        ${differenceGaz}
-        </strong>
+        <strong>${differenceGaz}</strong>
         </p>
 
         <br>
 
         <p>
         💨 Production gaz :
-        <strong>
-        ${productionGaz.toFixed(2)}
-        </strong>
+        <strong>${gaz.toFixed(2)}</strong>
         </p>
 
     `;
+
+
+    /* SAUVEGARDE */
+
+    const historique =
+        JSON.parse(
+            localStorage.getItem("historique")
+        ) || [];
+
+
+    historique.push({
+
+        type: "Production",
+
+        date: dateActuelle(),
+
+        plateforme: plateforme,
+
+        huile: huile.toFixed(2),
+
+        gaz: gaz.toFixed(2)
+
+    });
+
+
+    localStorage.setItem(
+        "historique",
+        JSON.stringify(historique)
+    );
 
 }
 
@@ -742,13 +762,13 @@ function calculerProduction() {
 
 function enregistrerPassation() {
 
-
     const equipe =
         document.getElementById("equipe").value;
 
-
     const observation =
-        document.getElementById("observation").value;
+        document
+        .getElementById("observation")
+        .value;
 
 
     if (observation.trim() === "") {
@@ -760,14 +780,37 @@ function enregistrerPassation() {
     }
 
 
-    alert(
-        "✅ Passation enregistrée\n\n"
-        + "Équipe : " + equipe
-        + "\nObservation : " + observation
+    const historique =
+        JSON.parse(
+            localStorage.getItem("historique")
+        ) || [];
+
+
+    historique.push({
+
+        type: "Passation",
+
+        date: dateActuelle(),
+
+        equipe: equipe,
+
+        observation: observation
+
+    });
+
+
+    localStorage.setItem(
+        "historique",
+        JSON.stringify(historique)
     );
 
 
-    document.getElementById("observation").value = "";
+    alert("✅ Passation enregistrée.");
+
+
+    document
+        .getElementById("observation")
+        .value = "";
 
 }
 
@@ -777,9 +820,10 @@ function enregistrerPassation() {
 
 function signalerAnomalie() {
 
-
     const type =
-        document.getElementById("typeAnomalie").value;
+        document
+        .getElementById("typeAnomalie")
+        .value;
 
 
     const description =
@@ -797,11 +841,32 @@ function signalerAnomalie() {
     }
 
 
-    alert(
-        "🚨 Anomalie enregistrée\n\n"
-        + "Type : " + type
-        + "\nDescription : " + description
+    const historique =
+        JSON.parse(
+            localStorage.getItem("historique")
+        ) || [];
+
+
+    historique.push({
+
+        type: "Anomalie",
+
+        date: dateActuelle(),
+
+        anomalie: type,
+
+        description: description
+
+    });
+
+
+    localStorage.setItem(
+        "historique",
+        JSON.stringify(historique)
     );
+
+
+    alert("🚨 Anomalie enregistrée.");
 
 
     document
@@ -811,9 +876,175 @@ function signalerAnomalie() {
 }
 
 
+
+/* ================= HISTORIQUE ================= */
+
+function afficherHistorique() {
+
+    const historique =
+        JSON.parse(
+            localStorage.getItem("historique")
+        ) || [];
+
+
+    const zone =
+        document.getElementById("historique");
+
+
+    if (historique.length === 0) {
+
+        zone.innerHTML = `
+
+            <div class="empty">
+
+                Aucun enregistrement.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    zone.innerHTML = "";
+
+
+    historique
+        .slice()
+        .reverse()
+        .forEach(function(item, index) {
+
+
+        let contenu = "";
+
+
+        if (item.type === "Production") {
+
+            contenu = `
+
+                <strong>📊 Production</strong>
+
+                <p>
+                Date : ${item.date}
+                </p>
+
+                <p>
+                Plateforme :
+                ${item.plateforme}
+                </p>
+
+                <p>
+                Huile :
+                ${item.huile}
+                </p>
+
+                <p>
+                Gaz :
+                ${item.gaz}
+                </p>
+
+            `;
+
+        }
+
+
+        if (item.type === "Passation") {
+
+            contenu = `
+
+                <strong>📝 Passation</strong>
+
+                <p>
+                Date : ${item.date}
+                </p>
+
+                <p>
+                Équipe :
+                ${item.equipe}
+                </p>
+
+                <p>
+                ${item.observation}
+                </p>
+
+            `;
+
+        }
+
+
+        if (item.type === "Anomalie") {
+
+            contenu = `
+
+                <strong>🚨 Anomalie</strong>
+
+                <p>
+                Date : ${item.date}
+                </p>
+
+                <p>
+                Type :
+                ${item.anomalie}
+                </p>
+
+                <p>
+                ${item.description}
+                </p>
+
+            `;
+
+        }
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "history-item";
+
+
+        div.innerHTML = contenu;
+
+
+        zone.appendChild(div);
+
+    });
+
+}
+
+
+
+/* ================= EFFACER ================= */
+
+function effacerHistorique() {
+
+    const confirmation =
+        confirm(
+            "Voulez-vous vraiment effacer tout l'historique ?"
+        );
+
+
+    if (!confirmation) {
+
+        return;
+
+    }
+
+
+    localStorage.removeItem("historique");
+
+
+    afficherHistorique();
+
+}
+
+
 </script>
 
 
 </body>
 
-      </html>
+</html>
