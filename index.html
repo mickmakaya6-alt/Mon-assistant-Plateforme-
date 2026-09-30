@@ -1,335 +1,819 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Assistant Opérateur</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    body {
-      background: #f2f4f7;
-      padding: 20px;
-    }
+<title>Assistant Opérateur</title>
 
-    .app {
-      max-width: 500px;
-      margin: auto;
-    }
+<style>
 
-    .header {
-      background: #1f4e79;
-      color: white;
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    .header h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+    padding-bottom: 75px;
+}
 
-    .header p {
-      font-size: 14px;
-    }
+/* HEADER */
 
-    .menu {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
+.header {
+    background: #123b5d;
+    color: white;
+    padding: 25px 20px;
+    border-radius: 0 0 25px 25px;
+}
 
-    .card {
-      background: white;
-      padding: 25px 15px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      cursor: pointer;
-    }
+.header h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+}
 
-    .card:active {
-      transform: scale(0.97);
-    }
+.header p {
+    opacity: 0.85;
+}
 
-    .icon {
-      font-size: 35px;
-      margin-bottom: 10px;
-    }
+/* CONTENU */
 
-    .card h2 {
-      font-size: 17px;
-      color: #333;
-    }
+.container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+}
 
-    .content {
-      background: white;
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 15px;
-      display: none;
-    }
+/* TITRE */
 
-    .content h2 {
-      margin-bottom: 15px;
-      color: #1f4e79;
-    }
+.section-title {
+    margin-bottom: 15px;
+}
 
-    label {
-      display: block;
-      margin-top: 12px;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
+.section-title h2 {
+    font-size: 22px;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
+.section-title p {
+    color: #777;
+    margin-top: 5px;
+}
 
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 13px;
-      border: none;
-      border-radius: 8px;
-      background: #1f4e79;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
+/* CARTES */
 
-    #resultat {
-      margin-top: 15px;
-      padding: 15px;
-      background: #eef5fb;
-      border-radius: 8px;
-      font-weight: bold;
-    }
-  </style>
+.cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    cursor: pointer;
+}
+
+.card:active {
+    transform: scale(0.97);
+}
+
+.card .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.card h3 {
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.card p {
+    color: #777;
+    font-size: 13px;
+}
+
+/* PAGES */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* FORMULAIRE */
+
+.form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    background: #fafafa;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* BOUTONS */
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 10px;
+    background: #123b5d;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* RESULTAT */
+
+.result {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 12px;
+    background: #eef6fb;
+    display: none;
+}
+
+.result h3 {
+    margin-bottom: 10px;
+}
+
+/* NAVIGATION */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.nav-item {
+    text-align: center;
+    color: #777;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.nav-item .nav-icon {
+    font-size: 23px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.nav-item.active {
+    color: #123b5d;
+    font-weight: bold;
+}
+
+/* BOUTON RETOUR */
+
+.back {
+    margin-bottom: 20px;
+    color: #123b5d;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<div class="app">
 
-  <div class="header">
+<!-- ================= HEADER ================= -->
+
+<div class="header">
+
     <h1>👷 Assistant Opérateur</h1>
-    <p>Gestion des opérations de plateforme</p>
-  </div>
 
-  <div class="menu">
-
-    <div class="card" onclick="ouvrir('production')">
-      <div class="icon">📊</div>
-      <h2>Production</h2>
-    </div>
-
-    <div class="card" onclick="ouvrir('passation')">
-      <div class="icon">📝</div>
-      <h2>Passation</h2>
-    </div>
-
-    <div class="card" onclick="ouvrir('anomalies')">
-      <div class="icon">🚨</div>
-      <h2>Anomalies</h2>
-    </div>
-
-    <div class="card" onclick="ouvrir('rapports')">
-      <div class="icon">📋</div>
-      <h2>Rapports</h2>
-    </div>
-
-  </div>
-
-
-  <!-- PRODUCTION -->
-
-  <div id="production" class="content">
-
-    <h2>📊 Calcul de production</h2>
-
-    <label>Plateforme</label>
-    <input id="plateforme" type="text" value="23-36">
-
-    <label>Constante huile</label>
-    <input id="constante" type="number" value="103800">
-
-    <label>Temps écoulé (secondes)</label>
-    <input id="temps" type="number" value="754">
-
-    <label>Compteur gaz début</label>
-    <input id="gazDebut" type="number" value="10002764">
-
-    <label>Compteur gaz fin</label>
-    <input id="gazFin" type="number" value="10002987">
-
-    <button onclick="calculer()">
-      Calculer
-    </button>
-
-    <div id="resultat">
-      Résultat : en attente...
-    </div>
-
-  </div>
-
-
-  <!-- PASSATION -->
-
-  <div id="passation" class="content">
-
-    <h2>📝 Passation</h2>
-
-    <label>Observations</label>
-
-    <input
-      id="observation"
-      type="text"
-      placeholder="Écrire une observation..."
-    >
-
-    <button onclick="enregistrerPassation()">
-      Enregistrer
-    </button>
-
-  </div>
-
-
-  <!-- ANOMALIES -->
-
-  <div id="anomalies" class="content">
-
-    <h2>🚨 Signaler une anomalie</h2>
-
-    <label>Description</label>
-
-    <input
-      id="anomalie"
-      type="text"
-      placeholder="Ex : fuite au manifold"
-    >
-
-    <button onclick="signalerAnomalie()">
-      Signaler
-    </button>
-
-  </div>
-
-
-  <!-- RAPPORTS -->
-
-  <div id="rapports" class="content">
-
-    <h2>📋 Rapports</h2>
-
-    <p>
-      Les rapports enregistrés apparaîtront ici.
-    </p>
-
-  </div>
+    <p>Plateforme 23-36</p>
 
 </div>
 
 
+
+<div class="container">
+
+
+<!-- ================= ACCUEIL ================= -->
+
+<div id="home" class="page active">
+
+    <div class="section-title">
+
+        <h2>Tableau de bord</h2>
+
+        <p>Bienvenue dans votre espace opérateur.</p>
+
+    </div>
+
+
+    <div class="cards">
+
+
+        <div class="card"
+             onclick="showPage('production')">
+
+            <div class="icon">📊</div>
+
+            <h3>Production</h3>
+
+            <p>Calculer la production</p>
+
+        </div>
+
+
+        <div class="card"
+             onclick="showPage('passation')">
+
+            <div class="icon">📝</div>
+
+            <h3>Passation</h3>
+
+            <p>Notes et observations</p>
+
+        </div>
+
+
+        <div class="card"
+             onclick="showPage('anomalies')">
+
+            <div class="icon">🚨</div>
+
+            <h3>Anomalies</h3>
+
+            <p>Signaler un problème</p>
+
+        </div>
+
+
+        <div class="card"
+             onclick="showPage('rapports')">
+
+            <div class="icon">📋</div>
+
+            <h3>Rapports</h3>
+
+            <p>Consulter les rapports</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= PRODUCTION ================= -->
+
+<div id="production" class="page">
+
+    <div class="back"
+         onclick="showPage('home')">
+
+        ← Retour
+
+    </div>
+
+
+    <div class="section-title">
+
+        <h2>📊 Production</h2>
+
+        <p>Calcul de production</p>
+
+    </div>
+
+
+    <div class="form-card">
+
+
+        <label>Plateforme</label>
+
+        <input
+            id="plateforme"
+            type="text"
+            value="23-36"
+        >
+
+
+        <label>Constante huile</label>
+
+        <input
+            id="constante"
+            type="number"
+            value="103800"
+        >
+
+
+        <label>Temps écoulé (secondes)</label>
+
+        <input
+            id="temps"
+            type="number"
+            value="754"
+        >
+
+
+        <label>Compteur gaz début</label>
+
+        <input
+            id="gazDebut"
+            type="number"
+            value="10002764"
+        >
+
+
+        <label>Compteur gaz fin</label>
+
+        <input
+            id="gazFin"
+            type="number"
+            value="10002987"
+        >
+
+
+        <button
+            class="btn"
+            onclick="calculerProduction()">
+
+            Calculer la production
+
+        </button>
+
+
+        <div
+            id="resultat"
+            class="result">
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= PASSATION ================= -->
+
+<div id="passation" class="page">
+
+    <div class="back"
+         onclick="showPage('home')">
+
+        ← Retour
+
+    </div>
+
+
+    <div class="section-title">
+
+        <h2>📝 Passation</h2>
+
+        <p>Enregistrer les observations</p>
+
+    </div>
+
+
+    <div class="form-card">
+
+
+        <label>Équipe</label>
+
+        <select id="equipe">
+
+            <option>Équipe 1</option>
+
+            <option>Équipe 2</option>
+
+            <option>Équipe 3</option>
+
+        </select>
+
+
+        <label>Observation</label>
+
+        <textarea
+            id="observation"
+            placeholder="Écrire l'observation...">
+        </textarea>
+
+
+        <button
+            class="btn"
+            onclick="enregistrerPassation()">
+
+            Enregistrer
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= ANOMALIES ================= -->
+
+<div id="anomalies" class="page">
+
+    <div class="back"
+         onclick="showPage('home')">
+
+        ← Retour
+
+    </div>
+
+
+    <div class="section-title">
+
+        <h2>🚨 Anomalies</h2>
+
+        <p>Signaler une anomalie</p>
+
+    </div>
+
+
+    <div class="form-card">
+
+
+        <label>Type d'anomalie</label>
+
+        <select id="typeAnomalie">
+
+            <option>Fuite</option>
+
+            <option>Pression anormale</option>
+
+            <option>Manomètre défectueux</option>
+
+            <option>Problème installation</option>
+
+            <option>Autre</option>
+
+        </select>
+
+
+        <label>Description</label>
+
+        <textarea
+            id="descriptionAnomalie"
+            placeholder="Décrire l'anomalie...">
+        </textarea>
+
+
+        <button
+            class="btn"
+            onclick="signalerAnomalie()">
+
+            🚨 Signaler
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= RAPPORTS ================= -->
+
+<div id="rapports" class="page">
+
+    <div class="back"
+         onclick="showPage('home')">
+
+        ← Retour
+
+    </div>
+
+
+    <div class="section-title">
+
+        <h2>📋 Rapports</h2>
+
+        <p>Historique des opérations</p>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <p>
+
+        Aucun rapport enregistré pour le moment.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+
+<!-- ================= NAVIGATION ================= -->
+
+<div class="bottom-nav">
+
+
+    <div
+        class="nav-item active"
+        onclick="showPage('home')">
+
+        <span class="nav-icon">🏠</span>
+
+        Accueil
+
+    </div>
+
+
+    <div
+        class="nav-item"
+        onclick="showPage('production')">
+
+        <span class="nav-icon">📊</span>
+
+        Production
+
+    </div>
+
+
+    <div
+        class="nav-item"
+        onclick="showPage('passation')">
+
+        <span class="nav-icon">📝</span>
+
+        Passation
+
+    </div>
+
+
+    <div
+        class="nav-item"
+        onclick="showPage('anomalies')">
+
+        <span class="nav-icon">🚨</span>
+
+        Anomalies
+
+    </div>
+
+
+</div>
+
+
+
 <script>
 
-  // Ouvrir une section
-  function ouvrir(section) {
 
-    const sections = document.querySelectorAll(".content");
+/* ================= NAVIGATION ================= */
 
-    sections.forEach(function(element) {
-      element.style.display = "none";
+function showPage(pageId) {
+
+
+    const pages =
+        document.querySelectorAll(".page");
+
+
+    pages.forEach(function(page) {
+
+        page.classList.remove("active");
+
     });
 
-    document.getElementById(section).style.display = "block";
-  }
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
 
 
-  // Calcul de production
-  function calculer() {
+    window.scrollTo(0, 0);
+
+}
+
+
+
+/* ================= CALCUL PRODUCTION ================= */
+
+function calculerProduction() {
+
 
     const constante =
-      Number(document.getElementById("constante").value);
+        Number(
+            document.getElementById("constante").value
+        );
+
 
     const temps =
-      Number(document.getElementById("temps").value);
+        Number(
+            document.getElementById("temps").value
+        );
+
 
     const gazDebut =
-      Number(document.getElementById("gazDebut").value);
+        Number(
+            document.getElementById("gazDebut").value
+        );
+
 
     const gazFin =
-      Number(document.getElementById("gazFin").value);
+        Number(
+            document.getElementById("gazFin").value
+        );
 
 
-    // Calcul huile
-    const huile = constante / temps;
+    if (temps <= 0) {
+
+        alert("Le temps doit être supérieur à zéro.");
+
+        return;
+
+    }
 
 
-    // Différence compteur gaz
-    const differenceGaz = gazFin - gazDebut;
+    const productionHuile =
+        constante / temps;
 
 
-    // Calcul gaz
-    const gaz =
-      differenceGaz * 86400 / temps;
+    const differenceGaz =
+        gazFin - gazDebut;
 
 
-    document.getElementById("resultat").innerHTML =
-
-      "🛢️ Production huile : "
-      + huile.toFixed(2)
-      + "<br><br>"
-
-      + "💨 Production gaz : "
-      + gaz.toFixed(2)
-      + "<br><br>"
-
-      + "📊 Différence compteur gaz : "
-      + differenceGaz;
-
-  }
+    const productionGaz =
+        differenceGaz * 86400 / temps;
 
 
-  // Passation
-  function enregistrerPassation() {
+    const resultat =
+        document.getElementById("resultat");
+
+
+    resultat.style.display = "block";
+
+
+    resultat.innerHTML = `
+
+        <h3>📊 Résultat</h3>
+
+        <p>
+        🛢️ Production huile :
+        <strong>
+        ${productionHuile.toFixed(2)}
+        </strong>
+        </p>
+
+        <br>
+
+        <p>
+        💨 Différence gaz :
+        <strong>
+        ${differenceGaz}
+        </strong>
+        </p>
+
+        <br>
+
+        <p>
+        💨 Production gaz :
+        <strong>
+        ${productionGaz.toFixed(2)}
+        </strong>
+        </p>
+
+    `;
+
+}
+
+
+
+/* ================= PASSATION ================= */
+
+function enregistrerPassation() {
+
+
+    const equipe =
+        document.getElementById("equipe").value;
+
 
     const observation =
-      document.getElementById("observation").value;
+        document.getElementById("observation").value;
+
+
+    if (observation.trim() === "") {
+
+        alert("Veuillez écrire une observation.");
+
+        return;
+
+    }
+
 
     alert(
-      "Passation enregistrée :\n" + observation
+        "✅ Passation enregistrée\n\n"
+        + "Équipe : " + equipe
+        + "\nObservation : " + observation
     );
 
-  }
+
+    document.getElementById("observation").value = "";
+
+}
 
 
-  // Anomalie
-  function signalerAnomalie() {
 
-    const anomalie =
-      document.getElementById("anomalie").value;
+/* ================= ANOMALIE ================= */
+
+function signalerAnomalie() {
+
+
+    const type =
+        document.getElementById("typeAnomalie").value;
+
+
+    const description =
+        document
+        .getElementById("descriptionAnomalie")
+        .value;
+
+
+    if (description.trim() === "") {
+
+        alert("Veuillez décrire l'anomalie.");
+
+        return;
+
+    }
+
 
     alert(
-      "🚨 Anomalie signalée :\n" + anomalie
+        "🚨 Anomalie enregistrée\n\n"
+        + "Type : " + type
+        + "\nDescription : " + description
     );
 
-  }
+
+    document
+        .getElementById("descriptionAnomalie")
+        .value = "";
+
+}
+
 
 </script>
 
+
 </body>
-    </html>
+
+      </html>
