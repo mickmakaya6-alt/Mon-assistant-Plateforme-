@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wing Wah Plateforme — 永华石化</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== EN-TÊTE PERMANENT ===== -->
+  <header id="entete">
+    <div class="logo">🛢</div>
+    <div class="titre-app">
+      <h1>WING WAH <span>永华石化</span></h1>
+      <p id="nom-plateforme">Plateforme : —</p>
+    </div>
+    <button class="btn-config" onclick="ouvrirEcran('config')">⚙️</button>
+  </header>
+
+  <!-- ===== ÉCRAN D'ACCUEIL ===== -->
+  <section id="accueil" class="ecran actif">
+    <div class="date-du-jour" id="date-accueil"></div>
+    <div class="grille-menu">
+
+      <button class="tuile" onclick="ouvrirEcran('r1')">
+        <span class="icone">📘</span>
+        <span class="libelle">Cahier de passation</span>
+        <span class="zh">平台岗位工作记录</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r2')">
+        <span class="icone">🛢</span>
+        <span class="libelle">Pressions journalières</span>
+        <span class="zh">采油日报表</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r3')">
+        <span class="icone">📊</span>
+        <span class="libelle">Mesure fluide &amp; gaz</span>
+        <span class="zh">量油测气记录</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r4')">
+        <span class="icone">🔧</span>
+        <span class="libelle">Vérification des buses</span>
+        <span class="zh">检查油嘴</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r5')" id="tuile-r5">
+        <span class="icone">🛢</span>
+        <span class="libelle">Rapport des cuves</span>
+        <span class="zh">储油罐检尺班报表</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r6')" id="tuile-r6">
+        <span class="icone">🚛</span>
+        <span class="libelle">Logistique du brute</span>
+        <span class="zh">原油中转运输单</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r7')">
+        <span class="icone">🚪</span>
+        <span class="libelle">Contrôle d'accès</span>
+        <span class="zh">平台门禁</span>
+      </button>
+
+      <button class="tuile tuile-alerte" onclick="ouvrirEcran('r8')">
+        <span class="icone">🚨</span>
+        <span class="libelle">Signalement immédiat</span>
+        <span class="zh">立即汇报</span>
+      </button>
+
+      <button class="tuile" onclick="ouvrirEcran('r9')">
+        <span class="icone">📖</span>
+        <span class="libelle">Dictionnaire</span>
+        <span class="zh">词典</span>
+      </button>
+
+      <button class="tuile tuile-historique" onclick="ouvrirEcran('historique')">
+        <span class="icone">📂</span>
+        <span class="libelle">Historique &amp; envois</span>
+        <span class="zh">历史记录</span>
+      </button>
+
+    </div>
+    <div class="autosave-info" id="autosave-info">💾 Sauvegarde automatique activée</div>
+  </section>
+
+  <!-- ===== ÉCRAN CONFIGURATION ===== -->
+  <section id="config" class="ecran">
+    <div class="barre-retour">
+      <button onclick="ouvrirEcran('accueil')">← Accueil</button>
+      <h2>⚙️ Configuration</h2>
+    </div>
+    <div id="config-contenu" class="contenu"></div>
+  </section>
+
+  <!-- ===== ÉCRANS DES RUBRIQUES ===== -->
+  <section id="r1" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>📘 Passation</h2></div><div class="contenu" id="contenu-r1"></div></section>
+  <section id="r2" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>🛢 Pressions</h2></div><div class="contenu" id="contenu-r2"></div></section>
+  <section id="r3" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>📊 Mesures</h2></div><div class="contenu" id="contenu-r3"></div></section>
+  <section id="r4" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>🔧 Buses</h2></div><div class="contenu" id="contenu-r4"></div></section>
+  <section id="r5" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>🛢 Cuves</h2></div><div class="contenu" id="contenu-r5"></div></section>
+  <section id="r6" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>🚛 Logistique</h2></div><div class="contenu" id="contenu-r6"></div></section>
+  <section id="r7" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>🚪 Accès</h2></div><div class="contenu" id="contenu-r7"></div></section>
+  <section id="r8" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>🚨 Signalement</h2></div><div class="contenu" id="contenu-r8"></div></section>
+  <section id="r9" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>📖 Dictionnaire</h2></div><div class="contenu" id="contenu-r9"></div></section>
+  <section id="historique" class="ecran"><div class="barre-retour"><button onclick="ouvrirEcran('accueil')">← Accueil</button><h2>📂 Historique</h2></div><div class="contenu" id="contenu-historique"></div></section>
+
+  <!-- ===== FENÊTRE MODALE ===== -->
+  <div id="modale" class="modale-cache">
+    <div class="modale-boite" id="modale-contenu"></div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
