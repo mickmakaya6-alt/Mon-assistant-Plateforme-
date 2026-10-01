@@ -1,1 +1,1884 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
 
+<title>Assistant Opérateur V5</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+    color:#0f172a;
+    padding-bottom:80px;
+}
+
+header{
+    background:#0f172a;
+    color:white;
+    padding:18px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+header h1{
+    font-size:21px;
+}
+
+header p{
+    font-size:13px;
+    opacity:.8;
+    margin-top:5px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:15px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.card{
+    background:white;
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.card h2{
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.card h3{
+    margin:12px 0 8px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:9px;
+    margin-top:6px;
+    margin-bottom:12px;
+    font-size:15px;
+    background:white;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+label{
+    font-size:14px;
+    font-weight:bold;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    margin-top:6px;
+    cursor:pointer;
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+.btn-green{
+    background:#16a34a;
+}
+
+.btn-orange{
+    background:#ea580c;
+}
+
+.btn-red{
+    background:#dc2626;
+}
+
+.btn-dark{
+    background:#0f172a;
+}
+
+.result{
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    padding:14px;
+    border-radius:8px;
+    margin-top:12px;
+    line-height:1.7;
+}
+
+.success{
+    background:#f0fdf4;
+    border-left:5px solid #16a34a;
+}
+
+.warning{
+    background:#fff7ed;
+    border-left:5px solid #ea580c;
+}
+
+.danger{
+    background:#fef2f2;
+    border-left:5px solid #dc2626;
+}
+
+.home-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.home-card{
+    background:white;
+    border-radius:14px;
+    padding:20px 12px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    cursor:pointer;
+}
+
+.home-card .icon{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.home-card strong{
+    display:block;
+    font-size:15px;
+}
+
+.home-card span{
+    font-size:12px;
+    color:#64748b;
+}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.stat{
+    background:white;
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 2px 7px rgba(0,0,0,.06);
+}
+
+.stat strong{
+    display:block;
+    font-size:22px;
+    margin-bottom:5px;
+}
+
+.stat span{
+    font-size:12px;
+    color:#64748b;
+}
+
+.history-item{
+    border-bottom:1px solid #e2e8f0;
+    padding:12px 0;
+}
+
+.history-item:last-child{
+    border-bottom:none;
+}
+
+.history-item strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+.history-item small{
+    color:#64748b;
+}
+
+.report-box{
+    background:#f8fafc;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    padding:14px;
+    white-space:pre-wrap;
+    line-height:1.6;
+    font-size:14px;
+    max-height:600px;
+    overflow:auto;
+}
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:68px;
+    background:white;
+    border-top:1px solid #cbd5e1;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    z-index:20;
+}
+
+.nav-btn{
+    width:20%;
+    background:none;
+    color:#475569;
+    padding:5px;
+    margin:0;
+    font-size:11px;
+}
+
+.nav-btn .nav-icon{
+    display:block;
+    font-size:20px;
+    margin-bottom:2px;
+}
+
+.nav-btn.active{
+    color:#2563eb;
+}
+
+.separator{
+    height:1px;
+    background:#e2e8f0;
+    margin:15px 0;
+}
+
+.empty{
+    text-align:center;
+    color:#64748b;
+    padding:20px;
+}
+
+@media(max-width:400px){
+    .home-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stat-grid{
+        grid-template-columns:1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛢️ Assistant Opérateur</h1>
+    <p>Plateforme 23-36 • Version 5</p>
+</header>
+
+<div class="container">
+
+<!-- ================= ACCUEIL ================= -->
+
+<section id="accueil" class="page active">
+
+    <div class="card">
+        <h2>Bienvenue 👋</h2>
+        <p>
+            Assistant numérique pour le suivi de la production,
+            des lectures, de la passation, des anomalies et des rapports.
+        </p>
+    </div>
+
+    <div class="stat-grid">
+
+        <div class="stat">
+            <strong id="statProduction">0</strong>
+            <span>Productions</span>
+        </div>
+
+        <div class="stat">
+            <strong id="statLectures">0</strong>
+            <span>Lectures</span>
+        </div>
+
+        <div class="stat">
+            <strong id="statAnomalies">0</strong>
+            <span>Anomalies</span>
+        </div>
+
+        <div class="stat">
+            <strong id="statPassations">0</strong>
+            <span>Passations</span>
+        </div>
+
+    </div>
+
+    <div class="home-grid">
+
+        <div class="home-card" onclick="showPage('production')">
+            <div class="icon">🛢️</div>
+            <strong>Production</strong>
+            <span>Calculs huile & gaz</span>
+        </div>
+
+        <div class="home-card" onclick="showPage('lectures')">
+            <div class="icon">📊</div>
+            <strong>Lectures</strong>
+            <span>Paramètres</span>
+        </div>
+
+        <div class="home-card" onclick="showPage('passation')">
+            <div class="icon">📋</div>
+            <strong>Passation</strong>
+            <span>État plateforme</span>
+        </div>
+
+        <div class="home-card" onclick="showPage('anomalies')">
+            <div class="icon">⚠️</div>
+            <strong>Anomalies</strong>
+            <span>Signalements</span>
+        </div>
+
+        <div class="home-card" onclick="showPage('rapports')">
+            <div class="icon">📄</div>
+            <strong>Rapports</strong>
+            <span>Rapport journalier</span>
+        </div>
+
+        <div class="home-card" onclick="showPage('historique')">
+            <div class="icon">🗂️</div>
+            <strong>Historique</strong>
+            <span>Données enregistrées</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PRODUCTION ================= -->
+
+<section id="production" class="page">
+
+    <div class="card">
+
+        <h2>🛢️ Calcul de production</h2>
+
+        <label>Plateforme</label>
+        <input id="prodPlateforme" value="23-36">
+
+        <label>Heure de début</label>
+        <input id="heureDebut" type="time" step="1" value="19:41:00">
+
+        <label>Heure de fin</label>
+        <input id="heureFin" type="time" step="1" value="19:53:34">
+
+        <label>Niveau début</label>
+        <input id="niveauDebut" type="number" value="20">
+
+        <label>Niveau fin</label>
+        <input id="niveauFin" type="number" value="50">
+
+        <label>Index gaz début</label>
+        <input id="gazDebut" type="number" value="10002764">
+
+        <label>Index gaz fin</label>
+        <input id="gazFin" type="number" value="10002987">
+
+        <label>Constante huile</label>
+        <input id="constanteHuile" type="number" value="103800">
+
+        <label>Coefficient gaz</label>
+        <input id="coefficientGaz" type="number" value="86400">
+
+        <button onclick="calculerProduction()">
+            🧮 Calculer la production
+        </button>
+
+        <div id="resultatProduction"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LECTURES ================= -->
+
+<section id="lectures" class="page">
+
+    <div class="card">
+
+        <h2>📊 Lecture des paramètres</h2>
+
+        <label>Heure de lecture</label>
+
+        <select id="lectureHeure">
+
+            <option value="08:00">08:00</option>
+            <option value="12:00">12:00</option>
+            <option value="16:00">16:00</option>
+            <option value="20:00">20:00</option>
+            <option value="00:00">00:00</option>
+            <option value="04:00">04:00</option>
+
+        </select>
+
+        <label>Pression tubing</label>
+        <input id="tubing" type="number" step="any">
+
+        <label>Pression casing</label>
+        <input id="casing" type="number" step="any">
+
+        <label>Pression ligne</label>
+        <input id="ligne" type="number" step="any">
+
+        <label>Observation</label>
+        <textarea id="observationLecture"
+        placeholder="Écrire une observation..."></textarea>
+
+        <button class="btn-green" onclick="enregistrerLecture()">
+            💾 Enregistrer la lecture
+        </button>
+
+        <div id="messageLecture"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PASSATION ================= -->
+
+<section id="passation" class="page">
+
+    <div class="card">
+
+        <h2>📋 Cahier de passation</h2>
+
+        <label>Équipe</label>
+
+        <select id="equipe">
+            <option value="Équipe 1 - Zone 1">
+                Équipe 1 - Zone 1
+            </option>
+
+            <option value="Équipe 2">
+                Équipe 2
+            </option>
+
+            <option value="Autre">
+                Autre
+            </option>
+        </select>
+
+        <label>État des installations</label>
+
+        <select id="etatInstallation">
+
+            <option value="Normal">Normal</option>
+
+            <option value="À surveiller">
+                À surveiller
+            </option>
+
+            <option value="Anomalie">
+                Anomalie
+            </option>
+
+        </select>
+
+        <label>Travaux / actions en cours</label>
+
+        <textarea id="travaux"
+        placeholder="Décrire les travaux ou actions..."></textarea>
+
+        <button class="btn-green" onclick="enregistrerPassation()">
+            💾 Enregistrer la passation
+        </button>
+
+        <div id="messagePassation"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ANOMALIES ================= -->
+
+<section id="anomalies" class="page">
+
+    <div class="card">
+
+        <h2>⚠️ Signaler une anomalie</h2>
+
+        <label>Type d'anomalie</label>
+
+        <select id="typeAnomalie">
+
+            <option value="Manomètre">Manomètre</option>
+
+            <option value="Fuite">Fuite</option>
+
+            <option value="Puits">Puits</option>
+
+            <option value="Manifold">Manifold</option>
+
+            <option value="Séparateur">Séparateur</option>
+
+            <option value="Cuve">Cuve</option>
+
+            <option value="Pression">Pression</option>
+
+            <option value="Autre">Autre</option>
+
+        </select>
+
+        <label>Description</label>
+
+        <textarea id="descriptionAnomalie"
+        placeholder="Décrire précisément l'anomalie..."></textarea>
+
+        <button class="btn-red" onclick="enregistrerAnomalie()">
+            🚨 Enregistrer l'anomalie
+        </button>
+
+        <div id="messageAnomalie"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= RAPPORTS ================= -->
+
+<section id="rapports" class="page">
+
+    <div class="card">
+
+        <h2>📄 Rapport journalier</h2>
+
+        <label>Date du rapport</label>
+
+        <input id="dateRapport" type="date">
+
+        <button onclick="genererRapport()">
+            📄 Générer le rapport
+        </button>
+
+        <button class="btn-green" onclick="copierRapport()">
+            📋 Copier le rapport
+        </button>
+
+        <div id="rapportResultat" style="margin-top:15px;"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= HISTORIQUE ================= -->
+
+<section id="historique" class="page">
+
+    <div class="card">
+
+        <h2>🗂️ Historique</h2>
+
+        <button class="btn-red" onclick="supprimerTout()">
+            🗑️ Supprimer toutes les données
+        </button>
+
+        <div id="historiqueResultat"></div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav class="bottom-nav">
+
+    <button class="nav-btn active"
+            onclick="showPage('accueil', this)">
+        <span class="nav-icon">🏠</span>
+        Accueil
+    </button>
+
+    <button class="nav-btn"
+            onclick="showPage('production', this)">
+        <span class="nav-icon">🛢️</span>
+        Production
+    </button>
+
+    <button class="nav-btn"
+            onclick="showPage('lectures', this)">
+        <span class="nav-icon">📊</span>
+        Lectures
+    </button>
+
+    <button class="nav-btn"
+            onclick="showPage('rapports', this)">
+        <span class="nav-icon">📄</span>
+        Rapports
+    </button>
+
+    <button class="nav-btn"
+            onclick="showPage('historique', this)">
+        <span class="nav-icon">🗂️</span>
+        Historique
+    </button>
+
+</nav>
+
+
+<script>
+
+/* =========================================================
+   STOCKAGE LOCAL
+========================================================= */
+
+const KEY_PRODUCTIONS = "productions";
+const KEY_LECTURES = "lectures";
+const KEY_PASSATIONS = "passations";
+const KEY_ANOMALIES = "anomalies";
+
+
+function getData(key){
+
+    return JSON.parse(
+        localStorage.getItem(key) || "[]"
+    );
+
+}
+
+
+function saveData(key, data){
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(data)
+    );
+
+}
+
+
+function dateAujourdHui(){
+
+    return new Date()
+        .toISOString()
+        .split("T")[0];
+
+}
+
+
+function dateHeure(){
+
+    return new Date()
+        .toLocaleString("fr-FR");
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(pageId, bouton){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+
+            page.classList.remove("active");
+
+        });
+
+
+    const page =
+        document.getElementById(pageId);
+
+    if(page){
+
+        page.classList.add("active");
+
+    }
+
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    if(bouton){
+
+        bouton.classList.add("active");
+
+    }
+
+
+    if(pageId === "accueil"){
+
+        mettreAJourStats();
+
+    }
+
+
+    if(pageId === "historique"){
+
+        afficherHistorique();
+
+    }
+
+
+    if(pageId === "rapports"){
+
+        const date =
+            document.getElementById("dateRapport");
+
+        if(!date.value){
+
+            date.value =
+                dateAujourdHui();
+
+        }
+
+        genererRapport();
+
+    }
+
+}
+
+
+/* =========================================================
+   CONVERSION HEURE
+========================================================= */
+
+function heureEnSecondes(heure){
+
+    const parties =
+        heure.split(":");
+
+    const h =
+        parseInt(parties[0] || 0);
+
+    const m =
+        parseInt(parties[1] || 0);
+
+    const s =
+        parseInt(parties[2] || 0);
+
+    return h * 3600 + m * 60 + s;
+
+}
+
+
+/* =========================================================
+   CALCUL PRODUCTION
+========================================================= */
+
+function calculerProduction(){
+
+    const plateforme =
+        document.getElementById("prodPlateforme")
+        .value;
+
+    const debut =
+        document.getElementById("heureDebut")
+        .value;
+
+    const fin =
+        document.getElementById("heureFin")
+        .value;
+
+    const niveauDebut =
+        parseFloat(
+            document.getElementById("niveauDebut").value
+        );
+
+    const niveauFin =
+        parseFloat(
+            document.getElementById("niveauFin").value
+        );
+
+    const gazDebut =
+        parseFloat(
+            document.getElementById("gazDebut").value
+        );
+
+    const gazFin =
+        parseFloat(
+            document.getElementById("gazFin").value
+        );
+
+    const constanteHuile =
+        parseFloat(
+            document.getElementById("constanteHuile").value
+        );
+
+    const coefficientGaz =
+        parseFloat(
+            document.getElementById("coefficientGaz").value
+        );
+
+
+    if(
+        !debut ||
+        !fin ||
+        isNaN(niveauDebut) ||
+        isNaN(niveauFin) ||
+        isNaN(gazDebut) ||
+        isNaN(gazFin) ||
+        isNaN(constanteHuile) ||
+        isNaN(coefficientGaz)
+    ){
+
+        alert("Veuillez remplir tous les champs.");
+
+        return;
+
+    }
+
+
+    let secondesDebut =
+        heureEnSecondes(debut);
+
+    let secondesFin =
+        heureEnSecondes(fin);
+
+
+    /* Gestion du passage à minuit */
+
+    if(secondesFin < secondesDebut){
+
+        secondesFin += 86400;
+
+    }
+
+
+    const duree =
+        secondesFin - secondesDebut;
+
+
+    if(duree <= 0){
+
+        alert("La durée doit être supérieure à zéro.");
+
+        return;
+
+    }
+
+
+    const differenceGaz =
+        gazFin - gazDebut;
+
+
+    const intervalle =
+        niveauFin - niveauDebut;
+
+
+    const huile =
+        constanteHuile / duree;
+
+
+    const gaz =
+        differenceGaz *
+        coefficientGaz /
+        duree;
+
+
+    const minutes =
+        Math.floor(duree / 60);
+
+    const secondes =
+        duree % 60;
+
+
+    const date =
+        dateAujourdHui();
+
+
+    const production = {
+
+        date: date,
+
+        dateHeure: dateHeure(),
+
+        plateforme: plateforme,
+
+        heureDebut: debut,
+
+        heureFin: fin,
+
+        duree: duree,
+
+        niveauDebut: niveauDebut,
+
+        niveauFin: niveauFin,
+
+        intervalle: intervalle,
+
+        gazDebut: gazDebut,
+
+        gazFin: gazFin,
+
+        differenceGaz: differenceGaz,
+
+        constanteHuile: constanteHuile,
+
+        coefficientGaz: coefficientGaz,
+
+        huile: huile,
+
+        gaz: gaz
+
+    };
+
+
+    const productions =
+        getData(KEY_PRODUCTIONS);
+
+
+    productions.push(production);
+
+
+    saveData(
+        KEY_PRODUCTIONS,
+        productions
+    );
+
+
+    document.getElementById(
+        "resultatProduction"
+    ).innerHTML = `
+
+        <div class="result success">
+
+            <strong>✅ Calcul terminé</strong>
+
+            <br><br>
+
+            <strong>Plateforme :</strong>
+            ${plateforme}
+
+            <br>
+
+            <strong>Durée :</strong>
+            ${minutes} min ${secondes} s
+
+            <br>
+
+            <strong>Intervalle :</strong>
+            ${niveauDebut} → ${niveauFin}
+
+            <br>
+
+            <strong>Différence gaz :</strong>
+            ${differenceGaz}
+
+            <hr style="margin:10px 0;border:0;border-top:1px solid #ccc;">
+
+            <strong>Huile :</strong>
+            ${huile.toFixed(2)}
+
+            <br>
+
+            <strong>Gaz :</strong>
+            ${gaz.toFixed(2)}
+
+            <br><br>
+
+            <small>
+            Enregistré automatiquement dans l'historique.
+            </small>
+
+        </div>
+
+    `;
+
+
+    mettreAJourStats();
+
+}
+
+
+/* =========================================================
+   ENREGISTRER LECTURE
+========================================================= */
+
+function enregistrerLecture(){
+
+    const heure =
+        document.getElementById("lectureHeure")
+        .value;
+
+    const tubing =
+        document.getElementById("tubing")
+        .value;
+
+    const casing =
+        document.getElementById("casing")
+        .value;
+
+    const ligne =
+        document.getElementById("ligne")
+        .value;
+
+    const observation =
+        document.getElementById("observationLecture")
+        .value;
+
+
+    const lecture = {
+
+        date: dateAujourdHui(),
+
+        dateHeure: dateHeure(),
+
+        heure: heure,
+
+        tubing: tubing,
+
+        casing: casing,
+
+        ligne: ligne,
+
+        observation: observation
+
+    };
+
+
+    const lectures =
+        getData(KEY_LECTURES);
+
+
+    lectures.push(lecture);
+
+
+    saveData(
+        KEY_LECTURES,
+        lectures
+    );
+
+
+    document.getElementById(
+        "messageLecture"
+    ).innerHTML = `
+
+        <div class="result success">
+
+            ✅ Lecture ${heure}
+            enregistrée avec succès.
+
+        </div>
+
+    `;
+
+
+    document.getElementById("tubing").value = "";
+    document.getElementById("casing").value = "";
+    document.getElementById("ligne").value = "";
+    document.getElementById("observationLecture").value = "";
+
+
+    mettreAJourStats();
+
+}
+
+
+/* =========================================================
+   ENREGISTRER PASSATION
+========================================================= */
+
+function enregistrerPassation(){
+
+    const equipe =
+        document.getElementById("equipe")
+        .value;
+
+    const etat =
+        document.getElementById("etatInstallation")
+        .value;
+
+    const travaux =
+        document.getElementById("travaux")
+        .value;
+
+
+    const passation = {
+
+        date: dateAujourdHui(),
+
+        dateHeure: dateHeure(),
+
+        equipe: equipe,
+
+        etat: etat,
+
+        travaux: travaux
+
+    };
+
+
+    const passations =
+        getData(KEY_PASSATIONS);
+
+
+    passations.push(passation);
+
+
+    saveData(
+        KEY_PASSATIONS,
+        passations
+    );
+
+
+    document.getElementById(
+        "messagePassation"
+    ).innerHTML = `
+
+        <div class="result success">
+
+            ✅ Passation enregistrée.
+
+        </div>
+
+    `;
+
+
+    document.getElementById("travaux").value = "";
+
+
+    mettreAJourStats();
+
+}
+
+
+/* =========================================================
+   ENREGISTRER ANOMALIE
+========================================================= */
+
+function enregistrerAnomalie(){
+
+    const type =
+        document.getElementById("typeAnomalie")
+        .value;
+
+    const description =
+        document.getElementById("descriptionAnomalie")
+        .value.trim();
+
+
+    if(!description){
+
+        alert(
+            "Veuillez décrire l'anomalie."
+        );
+
+        return;
+
+    }
+
+
+    const anomalie = {
+
+        date: dateAujourdHui(),
+
+        dateHeure: dateHeure(),
+
+        type: type,
+
+        description: description
+
+    };
+
+
+    const anomalies =
+        getData(KEY_ANOMALIES);
+
+
+    anomalies.push(anomalie);
+
+
+    saveData(
+        KEY_ANOMALIES,
+        anomalies
+    );
+
+
+    document.getElementById(
+        "messageAnomalie"
+    ).innerHTML = `
+
+        <div class="result danger">
+
+            🚨 Anomalie enregistrée :
+
+            <br>
+
+            <strong>${type}</strong>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "descriptionAnomalie"
+    ).value = "";
+
+
+    mettreAJourStats();
+
+}
+
+
+/* =========================================================
+   RAPPORT JOURNALIER
+========================================================= */
+
+function genererRapport(){
+
+    const date =
+        document.getElementById(
+            "dateRapport"
+        ).value ||
+        dateAujourdHui();
+
+
+    const productions =
+        getData(KEY_PRODUCTIONS)
+        .filter(item => item.date === date);
+
+
+    const lectures =
+        getData(KEY_LECTURES)
+        .filter(item => item.date === date);
+
+
+    const passations =
+        getData(KEY_PASSATIONS)
+        .filter(item => item.date === date);
+
+
+    const anomalies =
+        getData(KEY_ANOMALIES)
+        .filter(item => item.date === date);
+
+
+    let totalHuile = 0;
+
+    let totalGaz = 0;
+
+
+    productions.forEach(item => {
+
+        totalHuile +=
+            Number(item.huile || 0);
+
+        totalGaz +=
+            Number(item.gaz || 0);
+
+    });
+
+
+    let rapport = "";
+
+
+    rapport +=
+`════════════════════════════════
+       RAPPORT JOURNALIER
+       ASSISTANT OPÉRATEUR
+════════════════════════════════
+
+Date : ${date}
+Plateforme : 23-36
+
+`;
+
+
+    /* ---------------- PRODUCTION ---------------- */
+
+    rapport +=
+`🛢️ PRODUCTION
+────────────────────────────────
+`;
+
+
+    if(productions.length === 0){
+
+        rapport +=
+`Aucune donnée de production enregistrée.
+
+`;
+
+    }else{
+
+        productions.forEach((item, index) => {
+
+            rapport +=
+`${index + 1}. ${item.heureDebut} → ${item.heureFin}
+   Intervalle : ${item.niveauDebut} → ${item.niveauFin}
+   Durée : ${item.duree} secondes
+   Différence gaz : ${item.differenceGaz}
+   Huile calculée : ${Number(item.huile).toFixed(2)}
+   Gaz calculé : ${Number(item.gaz).toFixed(2)}
+
+`;
+
+        });
+
+
+        rapport +=
+`Total huile calculée : ${totalHuile.toFixed(2)}
+Total gaz calculé : ${totalGaz.toFixed(2)}
+
+`;
+
+    }
+
+
+    /* ---------------- LECTURES ---------------- */
+
+    rapport +=
+`📊 LECTURES DES PARAMÈTRES
+────────────────────────────────
+`;
+
+
+    if(lectures.length === 0){
+
+        rapport +=
+`Aucune lecture enregistrée.
+
+`;
+
+    }else{
+
+        lectures.forEach((item, index) => {
+
+            rapport +=
+`${index + 1}. ${item.heure}
+   Tubing : ${item.tubing || "-"}
+   Casing : ${item.casing || "-"}
+   Ligne : ${item.ligne || "-"}
+   Observation : ${item.observation || "Aucune"}
+
+`;
+
+        });
+
+    }
+
+
+    /* ---------------- ANOMALIES ---------------- */
+
+    rapport +=
+`⚠️ ANOMALIES
+────────────────────────────────
+`;
+
+
+    if(anomalies.length === 0){
+
+        rapport +=
+`Aucune anomalie signalée.
+
+`;
+
+    }else{
+
+        anomalies.forEach((item, index) => {
+
+            rapport +=
+`${index + 1}. ${item.type}
+   ${item.description}
+
+`;
+
+        });
+
+    }
+
+
+    /* ---------------- PASSATION ---------------- */
+
+    rapport +=
+`📋 PASSATION
+────────────────────────────────
+`;
+
+
+    if(passations.length === 0){
+
+        rapport +=
+`Aucune passation enregistrée.
+
+`;
+
+    }else{
+
+        passations.forEach((item, index) => {
+
+            rapport +=
+`${index + 1}. Équipe : ${item.equipe}
+   État : ${item.etat}
+   Travaux / actions :
+   ${item.travaux || "Aucun"}
+
+`;
+
+        });
+
+    }
+
+
+    rapport +=
+`════════════════════════════════
+FIN DU RAPPORT
+════════════════════════════════
+`;
+
+
+    document.getElementById(
+        "rapportResultat"
+    ).innerHTML = `
+
+        <div class="report-box">
+
+            ${escapeHtml(rapport)}
+
+        </div>
+
+    `;
+
+
+    window.dernierRapport =
+        rapport;
+
+}
+
+
+/* =========================================================
+   COPIER RAPPORT
+========================================================= */
+
+function copierRapport(){
+
+    if(!window.dernierRapport){
+
+        genererRapport();
+
+    }
+
+
+    const rapport =
+        window.dernierRapport;
+
+
+    if(!rapport){
+
+        alert(
+            "Veuillez d'abord générer le rapport."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+    ){
+
+        navigator.clipboard
+            .writeText(rapport)
+            .then(() => {
+
+                alert(
+                    "✅ Rapport copié. Vous pouvez maintenant le coller dans WhatsApp."
+                );
+
+            })
+            .catch(() => {
+
+                alert(
+                    "Impossible de copier automatiquement."
+                );
+
+            });
+
+    }else{
+
+        alert(
+            "La copie automatique n'est pas disponible sur ce navigateur."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HISTORIQUE
+========================================================= */
+
+function afficherHistorique(){
+
+    const productions =
+        getData(KEY_PRODUCTIONS);
+
+    const lectures =
+        getData(KEY_LECTURES);
+
+    const passations =
+        getData(KEY_PASSATIONS);
+
+    const anomalies =
+        getData(KEY_ANOMALIES);
+
+
+    let html = "";
+
+
+    /* Productions */
+
+    html += `
+        <h3>🛢️ Productions</h3>
+    `;
+
+
+    if(productions.length === 0){
+
+        html += `
+            <div class="empty">
+                Aucune production.
+            </div>
+        `;
+
+    }else{
+
+        [...productions]
+        .reverse()
+        .forEach(item => {
+
+            html += `
+                <div class="history-item">
+
+                    <strong>
+                        🛢️ ${item.date}
+                    </strong>
+
+                    <small>
+                        ${item.heureDebut}
+                        →
+                        ${item.heureFin}
+                        |
+                        Huile :
+                        ${Number(item.huile).toFixed(2)}
+                        |
+                        Gaz :
+                        ${Number(item.gaz).toFixed(2)}
+                    </small>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+
+    /* Lectures */
+
+    html += `
+        <div class="separator"></div>
+        <h3>📊 Lectures</h3>
+    `;
+
+
+    if(lectures.length === 0){
+
+        html += `
+            <div class="empty">
+                Aucune lecture.
+            </div>
+        `;
+
+    }else{
+
+        [...lectures]
+        .reverse()
+        .forEach(item => {
+
+            html += `
+                <div class="history-item">
+
+                    <strong>
+                        📊 ${item.date}
+                        - ${item.heure}
+                    </strong>
+
+                    <small>
+                        Tubing : ${item.tubing || "-"}
+                        |
+                        Casing : ${item.casing || "-"}
+                        |
+                        Ligne : ${item.ligne || "-"}
+                    </small>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+
+    /* Anomalies */
+
+    html += `
+        <div class="separator"></div>
+        <h3>⚠️ Anomalies</h3>
+    `;
+
+
+    if(anomalies.length === 0){
+
+        html += `
+            <div class="empty">
+                Aucune anomalie.
+            </div>
+        `;
+
+    }else{
+
+        [...anomalies]
+        .reverse()
+        .forEach(item => {
+
+            html += `
+                <div class="history-item">
+
+                    <strong>
+                        🚨 ${item.type}
+                    </strong>
+
+                    <small>
+                        ${item.date}
+                        -
+                        ${item.description}
+                    </small>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+
+    /* Passations */
+
+    html += `
+        <div class="separator"></div>
+        <h3>📋 Passations</h3>
+    `;
+
+
+    if(passations.length === 0){
+
+        html += `
+            <div class="empty">
+                Aucune passation.
+            </div>
+        `;
+
+    }else{
+
+        [...passations]
+        .reverse()
+        .forEach(item => {
+
+            html += `
+                <div class="history-item">
+
+                    <strong>
+                        📋 ${item.date}
+                    </strong>
+
+                    <small>
+                        Équipe : ${item.equipe}
+                        |
+                        État : ${item.etat}
+                        |
+                        ${item.travaux || "Aucun travail"}
+                    </small>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+
+    document.getElementById(
+        "historiqueResultat"
+    ).innerHTML = html;
+
+}
+
+
+/* =========================================================
+   STATISTIQUES ACCUEIL
+========================================================= */
+
+function mettreAJourStats(){
+
+    document.getElementById(
+        "statProduction"
+    ).textContent =
+        getData(KEY_PRODUCTIONS).length;
+
+
+    document.getElementById(
+        "statLectures"
+    ).textContent =
+        getData(KEY_LECTURES).length;
+
+
+    document.getElementById(
+        "statAnomalies"
+    ).textContent =
+        getData(KEY_ANOMALIES).length;
+
+
+    document.getElementById(
+        "statPassations"
+    ).textContent =
+        getData(KEY_PASSATIONS).length;
+
+}
+
+
+/* =========================================================
+   SUPPRIMER TOUT
+========================================================= */
+
+function supprimerTout(){
+
+    const confirmation =
+        confirm(
+            "⚠️ Voulez-vous vraiment supprimer toutes les données ?"
+        );
+
+
+    if(!confirmation){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        KEY_PRODUCTIONS
+    );
+
+    localStorage.removeItem(
+        KEY_LECTURES
+    );
+
+    localStorage.removeItem(
+        KEY_PASSATIONS
+    );
+
+    localStorage.removeItem(
+        KEY_ANOMALIES
+    );
+
+
+    afficherHistorique();
+
+    mettreAJourStats();
+
+
+    alert(
+        "Toutes les données ont été supprimées."
+    );
+
+}
+
+
+/* =========================================================
+   PROTECTION DU RAPPORT HTML
+========================================================= */
+
+function escapeHtml(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        mettreAJourStats();
+
+        document.getElementById(
+            "dateRapport"
+        ).value =
+            dateAujourdHui();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
