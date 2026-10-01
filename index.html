@@ -1,1 +1,1646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistant Opérateur V5</title>
 
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f3f5f7;
+  color:#222;
+  padding-bottom:85px;
+}
+
+header{
+  background:#0b5ed7;
+  color:white;
+  padding:18px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+header h1{font-size:22px}
+header p{font-size:13px;margin-top:5px}
+
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:15px;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.welcome,.section,.card{
+  background:white;
+  border-radius:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.welcome{
+  padding:18px;
+  margin-bottom:15px;
+}
+
+.welcome h2{margin-bottom:8px}
+
+.cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.card{
+  padding:20px 10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.card .icon{
+  font-size:32px;
+  margin-bottom:8px;
+}
+
+.card h3{font-size:15px}
+
+.section{
+  padding:18px;
+  margin-bottom:15px;
+}
+
+.section h2{
+  color:#0b5ed7;
+  margin-bottom:15px;
+  font-size:20px;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin-top:12px;
+  margin-bottom:5px;
+  font-size:14px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:15px;
+  background:white;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+button{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:9px;
+  margin-top:15px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn-primary{background:#0b5ed7;color:white}
+.btn-success{background:#198754;color:white}
+.btn-danger{background:#dc3545;color:white}
+.btn-secondary{background:#6c757d;color:white}
+
+.info{
+  background:#fff3cd;
+  color:#664d03;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.danger-box{
+  background:#f8d7da;
+  color:#842029;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+}
+
+.result{
+  background:#eef5ff;
+  border-left:5px solid #0b5ed7;
+  padding:15px;
+  border-radius:8px;
+  margin-top:15px;
+  display:none;
+}
+
+.result p{
+  margin:8px 0;
+}
+
+.result strong{
+  color:#0b5ed7;
+}
+
+.history-item{
+  background:#f8f9fa;
+  border-left:4px solid #0b5ed7;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.empty{
+  text-align:center;
+  color:#777;
+  padding:20px;
+}
+
+.report{
+  background:white;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:15px;
+  line-height:1.6;
+  font-size:14px;
+  white-space:pre-wrap;
+}
+
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:7px 2px;
+  box-shadow:0 -2px 10px rgba(0,0,0,.12);
+  z-index:20;
+}
+
+nav button{
+  background:transparent;
+  color:#555;
+  margin:0;
+  padding:5px 1px;
+  font-size:10px;
+}
+
+nav button span{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+
+@media(max-width:400px){
+  .cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🛢️ Assistant Opérateur</h1>
+<p>Gestion de production — Plateforme 23-36</p>
+</header>
+
+<div class="container">
+
+<!-- ================= ACCUEIL ================= -->
+
+<div id="accueil" class="page active">
+
+<div class="welcome">
+<h2>Bonjour Opérateur 👋</h2>
+<p>Bienvenue dans ton Assistant Opérateur.</p>
+<p style="margin-top:8px">
+Plateforme : <strong>23-36</strong>
+</p>
+</div>
+
+<div class="cards">
+
+<div class="card" onclick="showPage('production')">
+<div class="icon">🛢️</div>
+<h3>Production</h3>
+</div>
+
+<div class="card" onclick="showPage('lectures')">
+<div class="icon">📏</div>
+<h3>Lectures</h3>
+</div>
+
+<div class="card" onclick="showPage('passation')">
+<div class="icon">📋</div>
+<h3>Passation</h3>
+</div>
+
+<div class="card" onclick="showPage('anomalies')">
+<div class="icon">⚠️</div>
+<h3>Anomalies</h3>
+</div>
+
+<div class="card" onclick="showPage('rapports')">
+<div class="icon">📊</div>
+<h3>Rapports</h3>
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= PRODUCTION ================= -->
+
+<div id="production" class="page">
+
+<button class="btn-secondary" onclick="showPage('accueil')">
+← Retour
+</button>
+
+<div class="section">
+
+<h2>🛢️ Calcul de production</h2>
+
+<div class="info">
+Saisis l'heure avec les secondes.
+Exemple : 19:41:00 → 19:53:34.
+</div>
+
+<label>Plateforme</label>
+<input id="plateforme" value="23-36">
+
+<label>Heure début</label>
+<input id="heureDebut" value="19:41:00">
+
+<label>Heure fin</label>
+<input id="heureFin" value="19:53:34">
+
+<label>Niveau début</label>
+<input type="number" id="niveauDebut" value="20">
+
+<label>Niveau fin</label>
+<input type="number" id="niveauFin" value="50">
+
+<label>Index gaz début</label>
+<input type="number" id="gazDebut" value="10002764">
+
+<label>Index gaz fin</label>
+<input type="number" id="gazFin" value="10002987">
+
+<label>Constante huile</label>
+<input type="number" id="constanteHuile" value="103800">
+
+<label>Coefficient gaz</label>
+<input type="number" id="coefficientGaz" value="86400">
+
+<button class="btn-primary" onclick="calculerProduction()">
+🧮 Calculer
+</button>
+
+<div id="resultatProduction" class="result">
+
+<h3>Résultat</h3>
+
+<p>⏱️ Temps :
+<strong id="resultTemps"></strong></p>
+
+<p>📏 Intervalle :
+<strong id="resultIntervalle"></strong></p>
+
+<p>🔢 Différence gaz :
+<strong id="resultDifferenceGaz"></strong></p>
+
+<p>🛢️ Huile :
+<strong id="resultHuile"></strong></p>
+
+<p>🔥 Gaz :
+<strong id="resultGaz"></strong></p>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= LECTURES ================= -->
+
+<div id="lectures" class="page">
+
+<button class="btn-secondary" onclick="showPage('accueil')">
+← Retour
+</button>
+
+<div class="section">
+
+<h2>📏 Lectures des paramètres</h2>
+
+<div class="info">
+Horaires de contrôle :
+08h00 — 12h00 — 16h00 — 20h00 — 00h00 — 04h00
+</div>
+
+<label>Horaire</label>
+
+<select id="heureLecture">
+<option>08:00</option>
+<option>12:00</option>
+<option>16:00</option>
+<option>20:00</option>
+<option>00:00</option>
+<option>04:00</option>
+</select>
+
+<label>Pression tubing</label>
+<input type="number" step="any" id="tubing">
+
+<label>Pression casing</label>
+<input type="number" step="any" id="casing">
+
+<label>Pression ligne</label>
+<input type="number" step="any" id="ligne">
+
+<label>Observation</label>
+<textarea id="observationLecture"></textarea>
+
+<button class="btn-success" onclick="enregistrerLecture()">
+💾 Enregistrer la lecture
+</button>
+
+</div>
+
+<div class="section">
+<h2>📋 Lectures enregistrées</h2>
+<div id="listeLectures"></div>
+</div>
+
+</div>
+
+
+<!-- ================= PASSATION ================= -->
+
+<div id="passation" class="page">
+
+<button class="btn-secondary" onclick="showPage('accueil')">
+← Retour
+</button>
+
+<div class="section">
+
+<h2>📋 Cahier de passation</h2>
+
+<label>Équipe</label>
+
+<select id="equipe">
+<option>Équipe 1 - Zone 1</option>
+<option>Équipe 1 - Zone 2</option>
+<option>Équipe 2 - Zone 1</option>
+<option>Équipe 2 - Zone 2</option>
+</select>
+
+<label>État de l'installation</label>
+<textarea id="observationPassation"></textarea>
+
+<label>Travaux / actions à poursuivre</label>
+<textarea id="travauxPassation"></textarea>
+
+<button class="btn-success" onclick="enregistrerPassation()">
+💾 Enregistrer la passation
+</button>
+
+</div>
+</div>
+
+
+<!-- ================= ANOMALIES ================= -->
+
+<div id="anomalies" class="page">
+
+<button class="btn-secondary" onclick="showPage('accueil')">
+← Retour
+</button>
+
+<div class="section">
+
+<h2>⚠️ Signaler une anomalie</h2>
+
+<div class="danger-box">
+Pour une anomalie importante, appliquer la procédure d'escalade de ton équipe.
+</div>
+
+<label>Type d'anomalie</label>
+
+<select id="typeAnomalie">
+<option>Manomètre</option>
+<option>Fuite</option>
+<option>Puits</option>
+<option>Manifold</option>
+<option>Séparateur</option>
+<option>Cuve</option>
+<option>Pression</option>
+<option>Autre</option>
+</select>
+
+<label>Description</label>
+<textarea id="descriptionAnomalie"></textarea>
+
+<button class="btn-danger" onclick="enregistrerAnomalie()">
+⚠️ Enregistrer l'anomalie
+</button>
+
+</div>
+</div>
+
+
+<!-- ================= RAPPORTS ================= -->
+
+<div id="rapports" class="page">
+
+<button class="btn-secondary" onclick="showPage('accueil')">
+← Retour
+</button>
+
+<div class="section">
+
+<h2>📊 Rapport journalier</h2>
+
+<label>Date du rapport</label>
+
+<input
+type="date"
+id="dateRapport"
+onchange="genererRapport()"
+>
+
+<button class="btn-primary" onclick="genererRapport()">
+📄 Générer le rapport
+</button>
+
+<button class="btn-success" onclick="copierRapport()">
+📋 Copier le rapport
+</button>
+
+<div id="rapportJournalier" class="report" style="margin-top:15px">
+Le rapport apparaîtra ici.
+</div>
+
+</div>
+
+
+<div class="section">
+
+<h2>🗂️ Historique général</h2>
+
+<div id="historique"></div>
+
+<button class="btn-danger" onclick="supprimerHistorique()">
+🗑️ Supprimer tout l'historique
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav>
+
+<button onclick="showPage('accueil')">
+<span>🏠</span>
+Accueil
+</button>
+
+<button onclick="showPage('production')">
+<span>🛢️</span>
+Production
+</button>
+
+<button onclick="showPage('lectures')">
+<span>📏</span>
+Lectures
+</button>
+
+<button onclick="showPage('passation')">
+<span>📋</span>
+Passation
+</button>
+
+<button onclick="showPage('rapports')">
+<span>📊</span>
+Rapports
+</button>
+
+</nav>
+
+
+<script>
+
+/* =================================================
+   OUTILS
+================================================= */
+
+function getData(nom){
+
+return JSON.parse(
+localStorage.getItem(nom)
+) || [];
+
+}
+
+
+function saveData(nom,data){
+
+localStorage.setItem(
+nom,
+JSON.stringify(data)
+);
+
+}
+
+
+function aujourdHui(){
+
+const maintenant = new Date();
+
+const annee =
+maintenant.getFullYear();
+
+const mois =
+String(
+maintenant.getMonth()+1
+).padStart(2,"0");
+
+const jour =
+String(
+maintenant.getDate()
+).padStart(2,"0");
+
+return annee+"-"+mois+"-"+jour;
+
+}
+
+
+/* =================================================
+   NAVIGATION
+================================================= */
+
+function showPage(page){
+
+document
+.querySelectorAll(".page")
+.forEach(function(p){
+
+p.classList.remove("active");
+
+});
+
+document
+.getElementById(page)
+.classList.add("active");
+
+if(page==="rapports"){
+
+document.getElementById(
+"dateRapport"
+).value=aujourdHui();
+
+genererRapport();
+
+afficherHistorique();
+
+}
+
+if(page==="lectures"){
+
+afficherLectures();
+
+}
+
+window.scrollTo(0,0);
+
+}
+
+
+/* =================================================
+   HEURE → SECONDES
+================================================= */
+
+function heureEnSecondes(heure){
+
+const morceaux=heure.split(":");
+
+if(morceaux.length!==3){
+return NaN;
+}
+
+const h=parseInt(morceaux[0]);
+const m=parseInt(morceaux[1]);
+const s=parseInt(morceaux[2]);
+
+if(
+isNaN(h) ||
+isNaN(m) ||
+isNaN(s)
+){
+return NaN;
+}
+
+return h*3600+m*60+s;
+
+}
+
+
+/* =================================================
+   FORMAT TEMPS
+================================================= */
+
+function formatTemps(secondes){
+
+const h=Math.floor(
+secondes/3600
+);
+
+const m=Math.floor(
+(secondes%3600)/60
+);
+
+const s=secondes%60;
+
+return h+" h "+m+" min "+s+" s";
+
+}
+
+
+/* =================================================
+   PRODUCTION
+================================================= */
+
+function calculerProduction(){
+
+const plateforme=
+document.getElementById(
+"plateforme"
+).value;
+
+const debutTexte=
+document.getElementById(
+"heureDebut"
+).value;
+
+const finTexte=
+document.getElementById(
+"heureFin"
+).value;
+
+const niveauDebut=
+parseFloat(
+document.getElementById(
+"niveauDebut"
+).value
+);
+
+const niveauFin=
+parseFloat(
+document.getElementById(
+"niveauFin"
+).value
+);
+
+const gazDebut=
+parseFloat(
+document.getElementById(
+"gazDebut"
+).value
+);
+
+const gazFin=
+parseFloat(
+document.getElementById(
+"gazFin"
+).value
+);
+
+const constante=
+parseFloat(
+document.getElementById(
+"constanteHuile"
+).value
+);
+
+const coefficient=
+parseFloat(
+document.getElementById(
+"coefficientGaz"
+).value
+);
+
+let debut=
+heureEnSecondes(
+debutTexte
+);
+
+let fin=
+heureEnSecondes(
+finTexte
+);
+
+if(
+isNaN(debut) ||
+isNaN(fin)
+){
+
+alert(
+"Utilise le format HH:MM:SS."
+);
+
+return;
+
+}
+
+if(fin<debut){
+
+fin+=86400;
+
+}
+
+const temps=fin-debut;
+
+const intervalle=
+niveauFin-niveauDebut;
+
+const differenceGaz=
+gazFin-gazDebut;
+
+if(
+temps<=0 ||
+isNaN(intervalle) ||
+isNaN(differenceGaz)
+){
+
+alert(
+"Vérifie les valeurs saisies."
+);
+
+return;
+
+}
+
+if(differenceGaz<0){
+
+alert(
+"L'index gaz final ne peut pas être inférieur à l'index initial."
+);
+
+return;
+
+}
+
+const huile=
+constante/temps;
+
+const gaz=
+differenceGaz*
+coefficient/
+temps;
+
+
+/* AFFICHAGE */
+
+document.getElementById(
+"resultTemps"
+).textContent=
+temps+
+" secondes ("+
+formatTemps(temps)+")";
+
+document.getElementById(
+"resultIntervalle"
+).textContent=
+niveauDebut+
+" → "+
+niveauFin+
+" = "+
+intervalle;
+
+document.getElementById(
+"resultDifferenceGaz"
+).textContent=
+differenceGaz;
+
+document.getElementById(
+"resultHuile"
+).textContent=
+huile.toFixed(2);
+
+document.getElementById(
+"resultGaz"
+).textContent=
+gaz.toFixed(2);
+
+document.getElementById(
+"resultatProduction"
+).style.display=
+"block";
+
+
+/* SAUVEGARDE */
+
+const productions=
+getData("productions");
+
+productions.push({
+
+date:aujourdHui(),
+
+dateComplete:
+new Date().toLocaleString("fr-FR"),
+
+plateforme:plateforme,
+
+heureDebut:debutTexte,
+
+heureFin:finTexte,
+
+temps:temps,
+
+niveauDebut:niveauDebut,
+
+niveauFin:niveauFin,
+
+differenceGaz:differenceGaz,
+
+huile:huile,
+
+gaz:gaz
+
+});
+
+saveData(
+"productions",
+productions
+);
+
+alert(
+"✅ Production enregistrée."
+);
+
+}
+
+
+/* =================================================
+   LECTURES
+================================================= */
+
+function enregistrerLecture(){
+
+const heure=
+document.getElementById(
+"heureLecture"
+).value;
+
+const tubing=
+document.getElementById(
+"tubing"
+).value;
+
+const casing=
+document.getElementById(
+"casing"
+).value;
+
+const ligne=
+document.getElementById(
+"ligne"
+).value;
+
+const observation=
+document.getElementById(
+"observationLecture"
+).value;
+
+if(
+tubing==="" ||
+casing==="" ||
+ligne===""
+){
+
+alert(
+"Veuillez saisir les trois pressions."
+);
+
+return;
+
+}
+
+const lectures=
+getData("lectures");
+
+lectures.push({
+
+date:aujourdHui(),
+
+heure:heure,
+
+tubing:tubing,
+
+casing:casing,
+
+ligne:ligne,
+
+observation:observation
+
+});
+
+saveData(
+"lectures",
+lectures
+);
+
+document.getElementById(
+"tubing"
+).value="";
+
+document.getElementById(
+"casing"
+).value="";
+
+document.getElementById(
+"ligne"
+).value="";
+
+document.getElementById(
+"observationLecture"
+).value="";
+
+afficherLectures();
+
+alert(
+"✅ Lecture enregistrée."
+);
+
+}
+
+
+function afficherLectures(){
+
+const lectures=
+getData("lectures");
+
+const container=
+document.getElementById(
+"listeLectures"
+);
+
+const date=
+aujourdHui();
+
+const duJour=
+lectures.filter(
+x=>x.date===date
+);
+
+if(duJour.length===0){
+
+container.innerHTML=
+'<div class="empty">Aucune lecture aujourd’hui.</div>';
+
+return;
+
+}
+
+container.innerHTML="";
+
+duJour
+.slice()
+.reverse()
+.forEach(function(x){
+
+const div=
+document.createElement("div");
+
+div.className=
+"history-item";
+
+div.innerHTML=`
+
+<strong>📏 ${x.heure}</strong><br>
+Tubing : ${x.tubing}<br>
+Casing : ${x.casing}<br>
+Ligne : ${x.ligne}<br>
+Observation : ${x.observation || "Aucune"}
+
+`;
+
+container.appendChild(div);
+
+});
+
+}
+
+
+/* =================================================
+   PASSATION
+================================================= */
+
+function enregistrerPassation(){
+
+const equipe=
+document.getElementById(
+"equipe"
+).value;
+
+const observation=
+document.getElementById(
+"observationPassation"
+).value;
+
+const travaux=
+document.getElementById(
+"travauxPassation"
+).value;
+
+if(!observation){
+
+alert(
+"Veuillez saisir l'état de l'installation."
+);
+
+return;
+
+}
+
+const passations=
+getData("passations");
+
+passations.push({
+
+date:aujourdHui(),
+
+dateComplete:
+new Date().toLocaleString("fr-FR"),
+
+equipe:equipe,
+
+observation:observation,
+
+travaux:travaux
+
+});
+
+saveData(
+"passations",
+passations
+);
+
+document.getElementById(
+"observationPassation"
+).value="";
+
+document.getElementById(
+"travauxPassation"
+).value="";
+
+alert(
+"✅ Passation enregistrée."
+);
+
+}
+
+
+/* =================================================
+   ANOMALIES
+================================================= */
+
+function enregistrerAnomalie(){
+
+const type=
+document.getElementById(
+"typeAnomalie"
+).value;
+
+const description=
+document.getElementById(
+"descriptionAnomalie"
+).value;
+
+if(!description){
+
+alert(
+"Veuillez décrire l'anomalie."
+);
+
+return;
+
+}
+
+const anomalies=
+getData("anomalies");
+
+anomalies.push({
+
+date:aujourdHui(),
+
+dateComplete:
+new Date().toLocaleString("fr-FR"),
+
+type:type,
+
+description:description
+
+});
+
+saveData(
+"anomalies",
+anomalies
+);
+
+document.getElementById(
+"descriptionAnomalie"
+).value="";
+
+alert(
+"⚠️ Anomalie enregistrée."
+);
+
+}
+
+
+/* =================================================
+   RAPPORT JOURNALIER
+================================================= */
+
+function genererRapport(){
+
+const date=
+document.getElementById(
+"dateRapport"
+).value ||
+aujourdHui();
+
+const productions=
+getData("productions")
+.filter(
+x=>x.date===date
+);
+
+const lectures=
+getData("lectures")
+.filter(
+x=>x.date===date
+);
+
+const passations=
+getData("passations")
+.filter(
+x=>x.date===date
+);
+
+const anomalies=
+getData("anomalies")
+.filter(
+x=>x.date===date
+);
+
+
+/* TOTAL PRODUCTION */
+
+let totalHuile=0;
+let totalGaz=0;
+
+productions.forEach(function(x){
+
+totalHuile+=Number(x.huile)||0;
+totalGaz+=Number(x.gaz)||0;
+
+});
+
+
+/* DATE FRANÇAISE */
+
+const dateAffichee=
+new Date(
+date+"T12:00:00"
+).toLocaleDateString(
+"fr-FR",
+{
+weekday:"long",
+year:"numeric",
+month:"long",
+day:"numeric"
+}
+);
+
+
+/* CONSTRUCTION */
+
+let rapport="";
+
+rapport+="📋 RAPPORT JOURNALIER\n";
+rapport+="================================\n\n";
+
+rapport+="🏭 PLATEFORME : 23-36\n";
+
+rapport+="📅 DATE : "+
+dateAffichee+"\n\n";
+
+
+rapport+="🛢️ PRODUCTION\n";
+rapport+="--------------------------------\n";
+
+if(productions.length===0){
+
+rapport+="Aucun calcul de production enregistré.\n";
+
+}else{
+
+productions.forEach(function(x,i){
+
+rapport+=
+(i+1)+". "+
+x.heureDebut+
+" → "+
+x.heureFin+
+"\n";
+
+rapport+=
+"   Niveau : "+
+x.niveauDebut+
+" → "+
+x.niveauFin+
+"\n";
+
+rapport+=
+"   Temps : "+
+x.temps+
+" secondes\n";
+
+rapport+=
+"   Huile : "+
+Number(x.huile).toFixed(2)+
+"\n";
+
+rapport+=
+"   Gaz : "+
+Number(x.gaz).toFixed(2)+
+"\n\n";
+
+});
+
+rapport+="TOTAL HUILE : "+
+totalHuile.toFixed(2)+
+"\n";
+
+rapport+="TOTAL GAZ : "+
+totalGaz.toFixed(2)+
+"\n";
+
+}
+
+
+rapport+="\n📏 LECTURES DES PARAMÈTRES\n";
+rapport+="--------------------------------\n";
+
+if(lectures.length===0){
+
+rapport+="Aucune lecture enregistrée.\n";
+
+}else{
+
+lectures.forEach(function(x){
+
+rapport+=
+"⏰ "+
+x.heure+
+"\n";
+
+rapport+=
+"   Tubing : "+
+x.tubing+
+"\n";
+
+rapport+=
+"   Casing : "+
+x.casing+
+"\n";
+
+rapport+=
+"   Ligne : "+
+x.ligne+
+"\n";
+
+if(x.observation){
+
+rapport+=
+"   Observation : "+
+x.observation+
+"\n";
+
+}
+
+rapport+="\n";
+
+});
+
+}
+
+
+rapport+="⚠️ ANOMALIES\n";
+rapport+="--------------------------------\n";
+
+if(anomalies.length===0){
+
+rapport+="Aucune anomalie signalée.\n";
+
+}else{
+
+anomalies.forEach(function(x,i){
+
+rapport+=
+(i+1)+". "+
+x.type+
+"\n";
+
+rapport+=
+"   "+
+x.description+
+"\n\n";
+
+});
+
+}
+
+
+rapport+="📋 PASSATION\n";
+rapport+="--------------------------------\n";
+
+if(passations.length===0){
+
+rapport+="Aucune passation enregistrée.\n";
+
+}else{
+
+passations.forEach(function(x,i){
+
+rapport+=
+(i+1)+". "+
+x.equipe+
+"\n";
+
+rapport+=
+"   État : "+
+x.observation+
+"\n";
+
+rapport+=
+"   Travaux : "+
+(x.travaux || "Aucun")+
+"\n\n";
+
+});
+
+}
+
+
+rapport+="\n================================\n";
+rapport+="FIN DU RAPPORT\n";
+
+
+document.getElementById(
+"rapportJournalier"
+).textContent=
+rapport;
+
+}
+
+
+/* =================================================
+   COPIER LE RAPPORT
+================================================= */
+
+function copierRapport(){
+
+const rapport=
+document.getElementById(
+"rapportJournalier"
+).textContent;
+
+if(
+!rapport ||
+rapport==="Le rapport apparaîtra ici."
+){
+
+alert(
+"Génère d'abord le rapport."
+);
+
+return;
+
+}
+
+navigator.clipboard.writeText(
+rapport
+)
+.then(function(){
+
+alert(
+"✅ Rapport copié. Tu peux maintenant le coller dans WhatsApp."
+);
+
+})
+.catch(function(){
+
+alert(
+"Impossible de copier automatiquement. Sélectionne le texte du rapport."
+);
+
+});
+
+}
+
+
+/* =================================================
+   HISTORIQUE
+================================================= */
+
+function afficherHistorique(){
+
+const container=
+document.getElementById(
+"historique"
+);
+
+const productions=
+getData("productions");
+
+const anomalies=
+getData("anomalies");
+
+const passations=
+getData("passations");
+
+let html="";
+
+productions
+.slice()
+.reverse()
+.forEach(function(x){
+
+html+=`
+
+<div class="history-item">
+
+<strong>🛢️ PRODUCTION</strong><br>
+
+📅 ${x.date}<br>
+
+⏱️ ${x.heureDebut}
+→ ${x.heureFin}<br>
+
+🛢️ Huile :
+${Number(x.huile).toFixed(2)}<br>
+
+🔥 Gaz :
+${Number(x.gaz).toFixed(2)}
+
+</div>
+
+`;
+
+});
+
+
+anomalies
+.slice()
+.reverse()
+.forEach(function(x){
+
+html+=`
+
+<div class="history-item">
+
+<strong>⚠️ ANOMALIE</strong><br>
+
+📅 ${x.date}<br>
+
+🔧 ${x.type}<br>
+
+${x.description}
+
+</div>
+
+`;
+
+});
+
+
+passations
+.slice()
+.reverse()
+.forEach(function(x){
+
+html+=`
+
+<div class="history-item">
+
+<strong>📋 PASSATION</strong><br>
+
+📅 ${x.date}<br>
+
+👷 ${x.equipe}<br>
+
+${x.observation}
+
+</div>
+
+`;
+
+});
+
+
+if(!html){
+
+html=
+'<div class="empty">Aucun historique.</div>';
+
+}
+
+container.innerHTML=html;
+
+}
+
+
+/* =================================================
+   SUPPRESSION
+================================================= */
+
+function supprimerHistorique(){
+
+if(
+!confirm(
+"Supprimer toutes les données enregistrées ?"
+)
+){
+
+return;
+
+}
+
+localStorage.removeItem(
+"productions"
+);
+
+localStorage.removeItem(
+"lectures"
+);
+
+localStorage.removeItem(
+"passations"
+);
+
+localStorage.removeItem(
+"anomalies"
+);
+
+genererRapport();
+afficherHistorique();
+afficherLectures();
+
+alert(
+"🗑️ Toutes les données ont été supprimées."
+);
+
+}
+
+
+/* =================================================
+   INITIALISATION
+================================================= */
+
+document.getElementById(
+"dateRapport"
+).value=
+aujourdHui();
+
+genererRapport();
+
+</script>
+
+</body>
+</html>
